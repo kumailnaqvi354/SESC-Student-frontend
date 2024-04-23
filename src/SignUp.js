@@ -51,12 +51,25 @@ function SignUp() {
         DOB: dob,
         degree: degree,
       });
-      const financeResponse = await axios.post("http://localhost:3001/finance", {
-        studentId: response?.data?._id,
-        hasOutstandingBalance: false,
-        outstandingAmount:0
+      console.log("Debug id", response?.data?._id);
+      const financeResponse = await axios.post(
+        "http://localhost:3001/finance",
+        {
+          studentId: response?.data?._id,
+          hasOutstandingBalance: false,
+          outstandingAmount: 0,
+        }
+      );
 
-      });
+      const libraryResponse = await axios.post(
+        "http://localhost:3001/library",
+        {
+          studentId: response.data._id,
+          type: "none",
+          amount: "none",
+          dueDate: "0",
+        }
+      );
 
       console.log("Response:", response.data);
       console.log("finance Response:", financeResponse);
