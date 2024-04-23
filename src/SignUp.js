@@ -51,8 +51,15 @@ function SignUp() {
         DOB: dob,
         degree: degree,
       });
+      const financeResponse = await axios.post("http://localhost:3001/finance", {
+        studentId: response?.data?._id,
+        hasOutstandingBalance: false,
+        outstandingAmount:0
+
+      });
 
       console.log("Response:", response.data);
+      console.log("finance Response:", financeResponse);
     } catch (error) {
       console.log("error:", error);
     }

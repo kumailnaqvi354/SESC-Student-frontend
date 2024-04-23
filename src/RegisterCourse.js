@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function RegisterCourse({data}) {
+function RegisterCourse({ data }) {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
@@ -20,13 +20,22 @@ function RegisterCourse({data}) {
 
   const handleRegisterCourse = async (courseId) => {
     try {
-        const updatedCourses = [...courses, courseId];
-
+      const updatedCourses = [...courses, courseId];
       // Update student record with the course ID
-      const response = await axios.patch(`http://localhost:3001/student/${data._id}`, {
-        courses: updatedCourses
-      });
-      console.log("Student record updated:", response.data);
+      const response = await axios.patch(
+        `http://localhost:3001/student/${data._id}`,
+        {
+          courses: updatedCourses,
+        }
+      );
+      const financeResponse = await axios.patch(
+        `http://localhost:3001/finance/${data._id}`,
+        {
+          hasOutstandingBalance: true,
+          outstandingAmount: 500,
+        }
+      );
+      console.log("Debug finance", financeResponse);
     } catch (error) {
       console.error("Error updating student record:", error);
     }
@@ -34,24 +43,26 @@ function RegisterCourse({data}) {
 
   return (
     <>
-    <div style={{ margin: "20px" }}>
-      <h3>Register Course</h3>
-      <ul>
-        {courses.map((course, index) => (
-          <li key={index} style={courseItemStyle}>
-            <h4 style={courseTitleStyle}>{course.coursename}</h4>
-            <p style={courseDescriptionStyle}>{course.coursedescription}</p>
-            <p style={instructorStyle}>Instructor: {course.courseinstructor}</p>
-            <button
-              style={buttonStyle}
-              onClick={() => handleRegisterCourse(course._id)}
-            >
-              Register
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+      <div style={{ margin: "20px" }}>
+        <h3>Register Course</h3>
+        <ul>
+          {courses.map((course, index) => (
+            <li key={index} style={courseItemStyle}>
+              <h4 style={courseTitleStyle}>{course.coursename}</h4>
+              <p style={courseDescriptionStyle}>{course.coursedescription}</p>
+              <p style={instructorStyle}>
+                Instructor: {course.courseinstructor}
+              </p>
+              <button
+                style={buttonStyle}
+                onClick={() => handleRegisterCourse(course._id)}
+              >
+                Register
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </>
   );
 }
@@ -59,19 +70,19 @@ function RegisterCourse({data}) {
 const courseItemStyle = {
   border: "1px solid #ccc",
   padding: "10px",
-  marginBottom: "10px"
+  marginBottom: "10px",
 };
 
 const courseTitleStyle = {
-  marginTop: "0"
+  marginTop: "0",
 };
 
 const courseDescriptionStyle = {
-  margin: "5px 0"
+  margin: "5px 0",
 };
 
 const instructorStyle = {
-  margin: "5px 0"
+  margin: "5px 0",
 };
 
 const buttonStyle = {
@@ -80,7 +91,7 @@ const buttonStyle = {
   color: "#fff",
   border: "none",
   borderRadius: "4px",
-  cursor: "pointer"
+  cursor: "pointer",
 };
 
 export default RegisterCourse;

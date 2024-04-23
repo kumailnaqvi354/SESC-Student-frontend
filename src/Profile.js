@@ -9,7 +9,7 @@ function Profile({ userData }) {
   const [myCourses, setMyCourses] = useState(false);
   const [editedUserData, setEditedUserData] = useState({});
   const [data, setData] = useState({})
-
+  const [due, setDue] = useState({})
 
   const handleEnroll = () => {
     // Navigate to the register-course route
@@ -51,8 +51,19 @@ function Profile({ userData }) {
       console.error('Error updating profile:', error);
     }
   };
-  useEffect(()=>{
+  const getData =  async () =>{
+    try {
+      console.log("data", userData[0]._id);
 
+     const data = await axios.get(`http://localhost:3001/finance/${userData[0]._id}`);
+      console.log('Profile 11', data);
+      setDue(data.data[0])
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  }
+  useEffect(()=>{
+    getData();
     setData(userData[0]);
   }, [data])
   return (
@@ -146,16 +157,16 @@ function Profile({ userData }) {
           </div>
          
           <div style={styles.field}>
-            <label>Library Due:</label>
-            <span>{data?.libraryDue}</span>
+            <label>is Eligible:</label>
+            <span>{due?.hasOutstandingBalance}</span>
           </div>
           <div style={styles.field}>
             <label>Fees Due:</label>
-            <span>{data?.feesDue}</span>
+            <span>{due?.outstandingAmount } </span>
           </div>
           <button onClick={handleEdit}>Edit</button>
           <button onClick={handleEnroll}>Enroll in Course</button>
-          <button onClick={handleMyCourse}>Enroll in Course</button>
+          <button onClick={handleMyCourse}>My Course</button>
 
         </>
       )}

@@ -19,8 +19,9 @@ const [userData, setUserData] = useState({});
         email: email,
         password: password,
       });
-      console.log("Debug response:",response.data);
+      console.log("Debug response:",response);
       setUserData(response?.data);
+     
     } catch (error) {
       return console.log("error:", error);
     }
