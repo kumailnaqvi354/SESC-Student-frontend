@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import RegisterCourse from './RegisterCourse';
+import RegisteredCourses from './RegisteredCourses';
 
 function Profile({ userData }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isEnrollCourse, setIsEnrollCourse] = useState(false);
+  const [myCourses, setMyCourses] = useState(false);
   const [editedUserData, setEditedUserData] = useState({});
   const [data, setData] = useState({})
 
@@ -12,6 +14,12 @@ function Profile({ userData }) {
   const handleEnroll = () => {
     // Navigate to the register-course route
     setIsEnrollCourse(true);
+  };
+
+  
+  const handleMyCourse = () => {
+    setMyCourses(true);
+    // setEditedUserData(userData); // Initialize editedUserData with current userData
   };
 
   const handleEdit = () => {
@@ -44,6 +52,7 @@ function Profile({ userData }) {
     }
   };
   useEffect(()=>{
+
     setData(userData[0]);
   }, [data])
   return (
@@ -110,7 +119,7 @@ function Profile({ userData }) {
           <button type="button" onClick={handleCancelEdit}>Cancel</button>
         </form>
       ) : 
-      isEnrollCourse ? <RegisterCourse/> :
+      isEnrollCourse ? <RegisterCourse data={data}/> : myCourses ? <RegisteredCourses/> :
       
       (
         <>
@@ -146,6 +155,7 @@ function Profile({ userData }) {
           </div>
           <button onClick={handleEdit}>Edit</button>
           <button onClick={handleEnroll}>Enroll in Course</button>
+          <button onClick={handleMyCourse}>Enroll in Course</button>
 
         </>
       )}

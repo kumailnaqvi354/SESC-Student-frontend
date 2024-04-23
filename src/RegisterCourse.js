@@ -1,32 +1,39 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-function RegisterCourse() {
-  // Sample array of course objects
-  const courses = [
-    {
-      coursename: "Course 1",
-      coursedescription: "Description of Course 1",
-      courseinstructor: "Instructor 1"
-    },
-    {
-      coursename: "Course 2",
-      coursedescription: "Description of Course 2",
-      courseinstructor: "Instructor 2"
-    },
-    {
-      coursename: "Course 3",
-      coursedescription: "Description of Course 3",
-      courseinstructor: "Instructor 3"
+function RegisterCourse({data}) {
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    // Fetch courses from the database
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/course");
+        setCourses(response.data);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  const handleRegisterCourse = async (courseId) => {
+    try {
+        const updatedCourses = [...courses, courseId];
+
+      // Update student record with the course ID
+      const response = await axios.patch(`http://localhost:3001/student/${data._id}`, {
+        courses: updatedCourses
+      });
+      console.log("Student record updated:", response.data);
+    } catch (error) {
+      console.error("Error updating student record:", error);
     }
-  ];
-
-  // Function to handle course registration
-  const handleRegisterCourse = (courseName) => {
-    // Add your logic to handle course registration here
-    console.log(`Registered for ${courseName}`);
   };
 
   return (
+    <>
     <div style={{ margin: "20px" }}>
       <h3>Register Course</h3>
       <ul>
@@ -37,7 +44,7 @@ function RegisterCourse() {
             <p style={instructorStyle}>Instructor: {course.courseinstructor}</p>
             <button
               style={buttonStyle}
-              onClick={() => handleRegisterCourse(course.coursename)}
+              onClick={() => handleRegisterCourse(course._id)}
             >
               Register
             </button>
@@ -45,6 +52,7 @@ function RegisterCourse() {
         ))}
       </ul>
     </div>
+    </>
   );
 }
 
