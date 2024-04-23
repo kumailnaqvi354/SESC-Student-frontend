@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import RegisterCourse from "./RegisterCourse";
 import RegisteredCourses from "./RegisteredCourses";
+import BookBooking from "./BookBooking";
 
 function Profile({ userData }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isEnrollCourse, setIsEnrollCourse] = useState(false);
   const [myCourses, setMyCourses] = useState(false);
   const [editedUserData, setEditedUserData] = useState({});
+  const[bookBooking, setBookBooking] =useState(false);
   const [data, setData] = useState({});
   const [due, setDue] = useState({});
-
   const handleEnroll = () => {
     // Navigate to the register-course route
     setIsEnrollCourse(true);
@@ -34,6 +35,10 @@ function Profile({ userData }) {
     const { name, value } = e.target;
     setEditedUserData({ ...editedUserData, [name]: value });
   };
+
+  const handleBookBooking = () =>{
+    setBookBooking(true);
+  }
 
   const handleMyDue = async (e) => {
     console.log("Debug userData[0]._id", userData[0]._id);
@@ -163,7 +168,7 @@ function Profile({ userData }) {
         <RegisterCourse data={data} />
       ) : myCourses ? (
         <RegisteredCourses />
-      ) : (
+      ) : bookBooking ? (<BookBooking data={data}/>) :(
         <>
           <div style={styles.field}>
             <label>First Name:</label>
@@ -198,6 +203,7 @@ function Profile({ userData }) {
           <button onClick={handleEdit}>Edit</button>
           <button onClick={handleEnroll}>Enroll in Course</button>
           <button onClick={handleMyCourse}>My Course</button>
+          <button onClick={handleBookBooking}>Get a book</button>
           <button onClick={handleMyDue}>Pay Due</button>
         </>
       )}
